@@ -59,15 +59,22 @@
                   <tr class="warning">
                     <td colspan="17">Pengawas</td>
                   </tr>
+                  
 				  <?php
 				  $count = 1;
 				  foreach($pengawas as $p){
+				  	$testl = $p->id_juri;
+				 	$testk = $this->uri->segment(4);
+				  	$ci = &get_instance();
+					$ci->load->model('nilai_model');
+					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
 				  ?>
+
                   <tr>
                     <td><?php echo "P$count";?></td>
                     <td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
                     <?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><?php echo form_input(array('class' => 'form-control', 'name' => 'frmnilai'));?></td>
+					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
 					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
 					<?php echo form_close();?>
                   </tr>
@@ -80,12 +87,17 @@
 					  <?php
 					  $count = 1;
 					  foreach($inspektur as $p){
+					  	$testl = $p->id_juri;
+				 	$testk = $this->uri->segment(4);
+				  	$ci = &get_instance();
+					$ci->load->model('nilai_model');
+					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
 					  ?>
 					  <tr>
 						<td><?php echo "IP	$count";?></td>
 						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
 						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><?php echo form_input(array('class' => 'form-control', 'name' => 'frmnilai'));?></td>
+					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
 					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
 					<?php echo form_close();?>
 					  </tr>
@@ -98,12 +110,17 @@
 					 <?php
 					  $count = 1;
 					  foreach($korlap as $p){
+					  	$testl = $p->id_juri;
+				 	$testk = $this->uri->segment(4);
+				  	$ci = &get_instance();
+					$ci->load->model('nilai_model');
+					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
 					  ?>
 					  <tr>
 						<td><?php echo "K$count";?></td>
 						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
 						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><?php echo form_input(array('class' => 'form-control', 'name' => 'frmnilai'));?></td>
+					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
 					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
 					<?php echo form_close();?>			  
 					   </tr>
@@ -116,12 +133,17 @@
 					  <?php
 					  $count = 1;
 					  foreach($juri as $p){
+					  	$testl = $p->id_juri;
+				 	$testk = $this->uri->segment(4)	;
+				  	$ci = &get_instance();
+					$ci->load->model('nilai_model');
+					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
 					  ?>
 					  <tr>
 						<td><?php echo "J$count";?></td>
 						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
 						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><?php echo form_input(array('class' => 'form-control', 'name' => 'frmnilai'));?></td>
+					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
 					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
 					<?php echo form_close();?>
 					  </tr>
@@ -511,10 +533,6 @@
 						<th style="text-align:center;">Koncer B</th>
 						<th style="text-align:center;">Koncer C</th>
 						<th style="text-align:center;">Total Nilai</th>
-						<th style="text-align:center;">Nama Burung</th>
-						<th style="text-align:center;">Pemilik Burung</th>
-						<th style="text-align:center;">Alamat Pemilik</th>
-						<th style="text-align:center;">Keterangan</th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -536,12 +554,6 @@
 						<td style="text-align:center;"><?php echo $n->koncer->jumlah_koncerb;?></td>
 						<td style="text-align:center;"><?php echo $n->koncer->jumlah_koncerc;?></td>
 						<td style="text-align:center;"><?php echo $n->total_nilai;?></td>
-						<td style="text-align:center;">
-						<a href="#" id="editketerangan" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);">Contoh</a></td>
 					  </tr>
 					  <?php 
 					  $no+=1;
@@ -684,7 +696,35 @@ $(document).ready(function() {
     url: '<?php echo base_url()."nilai/edit";?>',
     title: 'Rubah gantangan: '
 	});
+
+	$('#edit-nb').editable({
+	type: 'text',
+    name: 'nama_burung',
+    url: '<?php echo base_url()."nilai/editkoncer/nb";?>',
+    title: 'Rubah Nama Burung: '
+	});
+
+	$('#edit-pb').editable({
+	type: 'text',
+    name: 'pemilik_burung',
+    url: '<?php echo base_url()."nilai/editkoncer/pb";?>',
+    title: 'Rubah Nama Burung: '
+	});
+
+	$('#edit-ap').editable({
+	type: 'text',
+    name: 'alamat_pemilik',
+    url: '<?php echo base_url()."nilai/editkoncer/ap";?>',
+    title: 'Rubah Nama Burung: '
+	});
 	
+	$('#edit-k').editable({
+	type: 'text',
+    name: 'keterangan',
+    url: '<?php echo base_url()."nilai/editkoncer/k";?>',
+    title: 'Rubah Nama Burung: '
+	});
+
 	$('#editnilai #editkoncera').editable({
 	type: 'text',
     name: 'koncera',

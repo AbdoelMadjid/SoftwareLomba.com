@@ -35,14 +35,27 @@
 		}
 
 		public function tambah() {
-			$nilai = explode(" ", $this->input->post('frmnilai'));
+			$nilai = preg_split('/\s+/', $this->input->post('frmnilai'));
+
 			$id_juri = $this->input->post('id_juri');
 			$id_event = $this->input->post('id_event');
 			$id_jenis = $this->input->post('id_jenis');
-			foreach($nilai as $val){
-				$this->nilai_model->insert_nilai_pertama($id_juri,$id_jenis,$val);
+			$jumlah_baris = $this->nilai_model->hitungJumlahNilai($id_juri,$id_jenis);
+
+			if($jumlah_baris <= 15){
+				if(sizeof($nilai) <= 15 - $jumlah_baris){
+					foreach($nilai as $val){
+						$this->nilai_model->insert_nilai_pertama($id_juri,$id_jenis,$val);
+					}
+					redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
+				} else {
+					echo "<script>alert('Nomor tidak boleh lebih dari 15')</script>";
+					redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
+				}
+			} else {
+				echo "<script>alert('Nomor tidak boleh lebih dari 15')</script>";
+				redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 			}
-			redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 		}
 		
 		public function edit(){

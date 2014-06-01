@@ -20,6 +20,14 @@ LIMIT 0 , 30
 		$query = $this->db->get_where('nilai', array('id_juri' => $id_juri, 'id_jenis' => $id_jenis));
 			 return $query->result(); //kembalikan daftar event
 	}
+
+	public function hitungJumlahNilai($id_juri,$id_jenis){
+		$this->db->where('id_juri', $id_juri);
+		$this->db->where('id_jenis', $id_jenis); 
+		$this->db->from('nilai');
+
+		return $this->db->count_all_results();
+	}
 	
 	public function list_koncer($id_juri, $id_jenis){
 		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
@@ -81,6 +89,7 @@ LIMIT 0 , 30
 		$pointc = $qi->koncerc;
 		foreach($result as $row){
 			$row->koncer = $this->nilai_model->get_jumlah_bendera($id_jenis, $row->gantangan);
+			$row->detail_koncer = $this->nilai_model->get_detailkoncer($id_jenis, $row->gantangan);
 			$row->total_nilai = ($row->koncer->jumlah_koncera * $pointa)+
 			($row->koncer->jumlah_koncerb * $pointb)+($row->koncer->jumlah_koncerc * $pointc);
 		}
@@ -102,6 +111,11 @@ LIMIT 0 , 30
 	public function get_jumlah_bendera($id_jenis,$id_gantangan){
 		$this->db->select("sum(koncera = $id_gantangan) as jumlah_koncera, ".
 		"sum(koncerb = $id_gantangan) as jumlah_koncerb, sum(koncerc = $id_gantangan) as jumlah_koncerc");
+		$query = $this->db->get_where('koncer', array('id_jenis' => $id_jenis));
+		return $query->row();
+	}
+
+	public function get_detailkoncer($id_jenis,$id_gantangan){
 		$query = $this->db->get_where('koncer', array('id_jenis' => $id_jenis));
 		return $query->row();
 	}

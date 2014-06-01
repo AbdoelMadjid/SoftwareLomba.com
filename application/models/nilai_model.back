@@ -20,6 +20,8 @@ LIMIT 0 , 30
 		$query = $this->db->get_where('nilai', array('id_juri' => $id_juri));
 			 return $query->result(); //kembalikan daftar event
 	}
+
+	
 	
 	public function list_koncer($id_juri, $id_jenis){
 		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
