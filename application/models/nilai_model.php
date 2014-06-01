@@ -1,0 +1,171 @@
+<?php
+class nilai_model extends CI_Model{
+
+	public function __construct(){
+		$this->load->database();
+		$this->load->model('jenis_model');
+	}
+	
+	/**
+	SELECT nilai.id_juri, juri.nama
+FROM nilai, juri
+WHERE nilai.id_jenis =1
+AND gantangan =10
+AND juri.id_juri = nilai.id_juri
+LIMIT 0 , 30
+*/
+	
+	public function list_nilai($id_juri,$id_jenis){
+		$this->db->order_by("id_nilai", "asc"); 
+		$query = $this->db->get_where('nilai', array('id_juri' => $id_juri, 'id_jenis' => $id_jenis));
+			 return $query->result(); //kembalikan daftar event
+	}
+	
+	public function list_koncer($id_juri, $id_jenis){
+		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
+		if($query->num_rows > 0)
+		return $query->row(); //kembalikan daftar event
+		
+		$data = array(
+		   'id_juri' => $id_juri ,
+		   'id_jenis' => $id_jenis,
+		   'koncera' => 0 ,
+		   'koncerb' => 0,
+		   'koncerc' => 0
+		);
+
+		$this->db->insert('koncer', $data); 
+		
+		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
+		return $query->row(); //kembalikan daftar event
+
+	}
+	
+	public function get_nomination($id_jenis){
+		$this->db->select("COUNT(gantangan) jumlah_gantangan, gantangan");
+		$this->db->order_by("jumlah_gantangan", "desc");
+		$this->db->order_by("gantangan", "asc");
+		$this->db->group_by("gantangan");
+		
+		$query = $this->db->get_where('nilai', array('id_jenis' => $id_jenis, 'gantangan !=' => 0));
+		return $query->result();
+	}
+	
+	public function get_nomination_print($id_jenis){
+		$limit = $this->jenis_model->get_jenis_limit($id_jenis);
+	
+		$this->db->select("COUNT(gantangan) jumlah_gantangan, gantangan");
+		$this->db->order_by("jumlah_gantangan", "desc");
+		$this->db->order_by("gantangan", "asc");
+		$this->db->group_by("gantangan");
+		
+		
+		$query = $this->db->get_where('nilai', array('id_jenis' => $id_jenis, 'gantangan !=' => 0), $limit,0);
+		return $query->result();
+	}
+	
+	public function get_koncer($id_jenis){
+		$limit = $this->jenis_model->get_jenis_limit($id_jenis);
+		$this->db->select("COUNT(gantangan) jumlah_gantangan, gantangan as gantangan");
+		$this->db->order_by("jumlah_gantangan", "desc");
+		$this->db->order_by("gantangan", "asc");
+		$this->db->group_by("gantangan");
+		
+		$query = $this->db->get_where('nilai', array('id_jenis' => $id_jenis, 'gantangan !=' => 0), $limit, 0);
+		$result = $query->result();
+		
+		$q = $this->db->get('benderakoncer');
+		$qi = $q->row();
+		$pointa = $qi->koncera;
+		$pointb = $qi->koncerb;
+		$pointc = $qi->koncerc;
+		foreach($result as $row){
+			$row->koncer = $this->nilai_model->get_jumlah_bendera($id_jenis, $row->gantangan);
+			$row->total_nilai = ($row->koncer->jumlah_koncera * $pointa)+
+			($row->koncer->jumlah_koncerb * $pointb)+($row->koncer->jumlah_koncerc * $pointc);
+		}
+		
+		function compare($first = false, $second = false){
+			$diff = $second->total_nilai-$first->total_nilai;
+			if($diff)return $diff;
+			$diff = $second->jumlah_gantangan-$first->jumlah_gantangan;
+			if($diff) return $diff;
+			return $first->gantangan-$second->gantangan;
+		}
+	
+		usort($result, 'compare');
+
+		return $result;
+	}
+	
+	
+	public function get_jumlah_bendera($id_jenis,$id_gantangan){
+		$this->db->select("sum(koncera = $id_gantangan) as jumlah_koncera, ".
+		"sum(koncerb = $id_gantangan) as jumlah_koncerb, sum(koncerc = $id_gantangan) as jumlah_koncerc");
+		$query = $this->db->get_where('koncer', array('id_jenis' => $id_jenis));
+		return $query->row();
+	}
+	
+	public function update($id_nilai, $value){
+		$query = $this->db->get_where('nilai', array('id_nilai' => $id_nilai));
+		$id_juri = $query->row()->id_juri;
+		
+		
+		$q = $this->db->get_where('nilai', array('id_juri' => $id_juri, 'gantangan' => $value));
+			if($q->num_rows() == 0 || $value == 0){
+				$data = array(
+					   'gantangan' => $value
+					);
+
+				$this->db->where('id_nilai', $id_nilai);
+				return $this->db->update('nilai', $data); 
+			}
+		else{
+			return false;
+		}
+			
+		
+	}
+
+	public function updatekoncer($id_koncer, $value, $nomorkoncer){
+		/**$where = "id_koncer='$id_koncer' AND (koncera='$value' OR koncerb='$value' OR koncerc='$value')";
+		$this->db->where($where, NULL, FALSE);
+		$this->db->from('koncer');
+		$q = $this->db->get();
+		
+			if($q->num_rows() == 0){**/
+				$data = array(
+					   $nomorkoncer => $value
+					);
+
+				if($this->db->where('id_koncer', $id_koncer) == TRUE){
+					return $this->db->update('koncer', $data); 
+				}
+				else{
+					return false;
+				}
+			
+		
+	}
+	
+	public function get_nomination_final($id_jenis,$limit){
+		$this->db->select("COUNT(gantangan) jumlah_gantangan, gantangan as text, 	gantangan as value");
+		$this->db->order_by("jumlah_gantangan", "desc");
+		$this->db->order_by("gantangan", "asc");
+		$this->db->group_by("gantangan");
+		
+		$query = $this->db->get_where('nilai', array('id_jenis' => $id_jenis, 'gantangan !=' => 0), $limit, 0);
+		return $query->result();
+	}
+
+	public function insert_nilai_pertama($id_juri,$id_jenis,$gantangan){
+		$data = array(
+		   'id_juri' => $id_juri,
+		   'id_jenis' => $id_jenis,
+		   'gantangan' => $gantangan
+		);
+
+		$this->db->insert('nilai', $data); 
+	}
+}
+?>
