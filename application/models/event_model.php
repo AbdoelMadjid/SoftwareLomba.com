@@ -22,12 +22,20 @@ class event_model extends CI_Model{
 			 return $query->result(); //kembalikan daftar event
 	}
 	
-	public function add_event(){
+	public function add_event($image){
 		
-		$data = array(
-			'event' => $this->input->post('event_name'),
-			'deskripsi' => $this->input->post('deskripsi')
-		);
+		if($image != ""){
+			$data = array(
+				'event' => $this->input->post('event_name'),
+				'deskripsi' => $this->input->post('deskripsi'),
+				'gambar' => $image
+			);
+		} else {
+			$data = array(
+				'event' => $this->input->post('event_name'),
+				'deskripsi' => $this->input->post('deskripsi')
+			);
+		}
 		
 		$this->db->insert('event', $data);
 		$id = $this->db->insert_id();

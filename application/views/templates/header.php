@@ -9,7 +9,8 @@
     <link rel="shortcut icon" href="<?php echo base_url();?>public/image/favicon.ico">
 
     <title>Software Nominasi Kicau Mania</title>
-
+     <script src="<?php echo base_url(); ?>ckeditor/ckeditor.js"></script>
+      <link rel="stylesheet" href="<?php base_url(); ?>ckfinder/ckfinder.js">
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url();?>/public/dist/css/bootstrap.css" rel="stylesheet">
 
@@ -35,7 +36,7 @@
   <!-- NAVBAR
 ================================================== -->
     <div class="navbar-wrapper">
-        <div class="navbar navbar-default fixed-top" role="navigation">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -44,46 +45,33 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="<?php echo base_url();?>">Berita Nominasi</a>
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="<?php echo base_url();?>event">Event Lomba</a></li>
-                <li><a href="<?php echo base_url();?>laporan">Laporan Lomba</a></li>
-                <li><a href="<?php echo base_url();?>pendaftaran">Pendaftaran Lomba Online</a></li>
-                
-				 <!--
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-				-->
+                <li><a href="<?php echo base_url();?>pages/maintenance">Laporan Lomba</a></li>
+                <li><a href="<?php echo base_url();?>pages/maintenance">Pendaftaran Lomba Online</a></li>
               </ul>
-			  <ul class="nav navbar-nav navbar-right">
-				<li><a href="http://www.kicaumania.or.id" target="_blank">Kicaumania Indonesia</a></li>
-        <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Software Nominasi KM</a></li>
-                    <li><a href="#">Sejarah Lomba KM</a></li>
-                    <li><a href="#">Team Software Nominasi KM</a></li>
-                  </ul>
-                </li>
-			  	<?php  $ci =& get_instance(); $user=$ci->session->userdata('logged_in'); $username = $user['username'];
-				if(!empty($username)){?>
-					<li><a href="<?php echo base_url();?>login/logout">Log out</a></li>
-				<?php }else{?>
-				<li><a href="<?php echo base_url();?>login">Login</a></li>
-				<?php }?>
-				</ul>
+			        <ul class="nav navbar-nav navbar-right">
+        				<li><a href="http://www.kicaumania.or.id" target="_blank">Kicaumania</a></li>
+                <li><a href="<?php echo base_url();?>blog" target="_blank">Berita</a></li>
+                        
+        			  	<?php  $ci =& get_instance(); $user=$ci->session->userdata('logged_in'); $username = $user['username'];
+        				if(!empty($username)){?>
+        					<li class="dropdown">
+                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#addNews">Tambah Berita</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#addTeam">Tambah Team</a></li>
+                        <li><a href="<?php echo base_url() . "login/logout";?>">Logout</a></li>
+                    </ul>
+                  </li>
+        				<?php }else{?>
+        				<li><a href="<?php echo base_url();?>login">Login</a></li>
+        				<?php }?>
+        				<li><a href="<?php echo current_url();?>">Refresh</a></li>
+				      </ul>
             </div>
           </div>
         </div>

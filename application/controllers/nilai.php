@@ -9,6 +9,17 @@
 			$this->load->model('juri_model');
 			$this->load->model('nilai_model');
 		}
+
+		public function has_dupes($array){
+			 $dupe_array = array();
+				 foreach($array as $val){
+					  if(++$dupe_array[$val] > 1){
+					   return true;
+				  }
+			 }
+			 return false;
+		}
+
 		
 		public function view($id_event,$id_jenis){
 			$data['urlhelper'] = $this->urlhelper_model->getfromjenis($id_jenis);
@@ -35,25 +46,35 @@
 		}
 
 		public function tambah() {
-			$nilai = preg_split('/\s+/', $this->input->post('frmnilai'));
+			$nilai = preg_split('/\s+/', trim($this->input->post('frmnilai')));
 
 			$id_juri = $this->input->post('id_juri');
 			$id_event = $this->input->post('id_event');
 			$id_jenis = $this->input->post('id_jenis');
 			$jumlah_baris = $this->nilai_model->hitungJumlahNilai($id_juri,$id_jenis);
 
-			if($jumlah_baris <= 15){
-				if(sizeof($nilai) <= 15 - $jumlah_baris){
-					foreach($nilai as $val){
-						$this->nilai_model->insert_nilai_pertama($id_juri,$id_jenis,$val);
+			if(!$this->has_dupes($nilai)){
+				if($jumlah_baris <= 15){
+					if(sizeof($nilai) <= 15 - $jumlah_baris){
+						foreach ($nilai as $val) {
+							$hasilbool = $this->nilai_model->insert_nilai_pertama($id_juri,$id_jenis,$val);
+							if($hasilbool == false){
+								$this->session->set_flashdata('error_msg', 'Ada gantangan yang sama');
+								redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
+							}
+						}
+						$this->session->set_flashdata('success_msg', 'Nilai Gantangan berhasil di tambahkan');
+						redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
+					} else {
+						$this->session->set_flashdata('error_msg', 'Gantangan tidak boleh lebih dari 15');
+						redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 					}
-					redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 				} else {
-					echo "<script>alert('Nomor tidak boleh lebih dari 15')</script>";
+					$this->session->set_flashdata('error_msg', 'Gantangan tidak boleh lebih dari 15');
 					redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 				}
 			} else {
-				echo "<script>alert('Nomor tidak boleh lebih dari 15')</script>";
+				$this->session->set_flashdata('error_msg', 'Ada nilai gantangan Yang sama');
 				redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
 			}
 		}
@@ -153,7 +174,9 @@
 			}
 		}
 
-		public function isi_nilai(){}
-		
+		public function reset_koncer($id_juri,$id_jenis,$id_event){
+			$this->nilai_model->reset_koncer($id_juri,$id_jenis);
+			redirect(base_url()."nilai/view/".$id_event."/".$id_jenis."#home");
+		}		
 	}
 ?>

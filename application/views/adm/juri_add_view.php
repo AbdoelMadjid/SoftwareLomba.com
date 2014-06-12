@@ -1,9 +1,7 @@
-<div class="container">
-<div class="tab-pane fade active in" id="home">
-			
+	<div class="container" style="padding-top:80px;">
 			<!-- TABLE START -->
 			  <div class="bs-example table-responsive">
-              <table id="editnilai" class="table table-striped table-bordered table-hover">
+              <table class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr class="success">
                     <th width='70px'>Kode Juri</th>
@@ -11,87 +9,92 @@
                   </tr>
                 </thead>
                 <tbody>
-				<!-- NILAI PENGAWAS -->
-                  <tr class="warning">
-                    <td colspan="17">Pengawas</td>
-                  </tr>
-				  <?php
-				  $count = 1;
-				  foreach($pengawas as $p){
-				  ?>
-                  <tr>
-                    <td><?php echo "P$count";?></td>
-                    <td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-                  </tr>
-				  <?php $count+=1;} ?>
-				  <tr>
-                    <td colspan="17">
-					<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalPengawas">Tambahkan Pengawas</button>
-					</td>
-                  </tr>
-				 
-				 <!-- Inspektur PELAKSANA -->
-                  <tr class="warning">
-                    <td colspan="17">Inspektur Pelaksana</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($inspektur as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "IP	$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  <tr>
-                    <td colspan="17">
-					<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalInspektur">Tambahkan Inspektur Pelaksana</button>
-					</td>
-                  </tr>
-				  
-				  <!-- Koordinator Lapangan-->
-                  <tr class="warning">
-                    <td colspan="17">Koordinator Lapangan</td>
-                  </tr>
-					 <?php
-					  $count = 1;
-					  foreach($korlap as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "K$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  <tr>
-                    <td colspan="17">
-					<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalKorlap">Tambahkan KorLap</button>
-					</td>
-                  </tr>
-				  
-				  <!-- Juri -->
-                  <tr class="warning">
-                    <td colspan="17">Juri</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($juri as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "J$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  <tr>
-                    <td colspan="17">
-					<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalJuri">Tambahkan Juri</button>
-					</td>
-                  </tr>
+				   <!-- Pengawas -->
+	                  <tr class="warning">
+	                    <td colspan="2">Pengawas <button class="pull-right btn btn-primary btn-xs" data-toggle="modal" data-target="#modalPengawas">Tambahkan Pengawas</button></td> 
+	                  </tr>
+						  <?php
+						  if($pengawas == null){
+						  	echo '
+						  	<tr>
+								<td colspan="2" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  } else {
+						  $count = 1;
+						  foreach($pengawas as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "P$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+
+						  </tr>
+						  <?php $count+=1;} }?>
+
+					 <!-- Inspektur Pelaksana -->
+	                  <tr class="warning">
+	                    <td colspan="2">Inspektur Pelaksana <button class="pull-right btn btn-primary btn-xs" data-toggle="modal" data-target="#modalInspektur">Tambahkan Inspektur</button></td>
+	                  </tr>
+						  <?php
+						  if($inspektur == null){
+						  	echo '
+						  	<tr>
+								<td colspan="2" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  } else {
+						  $count = 1;
+						  foreach($inspektur as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "IP$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+						  </tr>
+						  <?php $count+=1;} }?>
+
+					<!-- Koordinator Lapangan -->
+	                  <tr class="warning">
+	                    <td colspan="2">Koordinator Lapangan <button class="pull-right btn btn-primary btn-xs" data-toggle="modal" data-target="#modalKorlap">Tambahkan Koordinator</button></td>
+	                  </tr>
+						  <?php
+						  if($korlap == null){
+						  	echo '
+						  	<tr>
+								<td colspan="2" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  } else {
+						  $count = 1;
+						  foreach($korlap as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "K$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+						  </tr>
+						  <?php $count+=1;} }?>
+
+					  <!-- Juri -->
+	                  <tr class="warning">
+	                    <td colspan="2">Juri <button class="pull-right btn btn-primary btn-xs" data-toggle="modal" data-target="#modalJuri">Tambahkan Juri</button></td>
+	                  </tr>
+
+						  <?php
+						  if($juri == null){
+						  	echo '
+						  	<tr>
+								<td colspan="2" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  } else {
+						  $count = 1;
+						  foreach($juri as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "A$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+						  </tr>
+						  <?php $count+=1;} }?>
                 </tbody>
               </table>
             </div>
 			<!-- TABLE END -->
 			</div>
-</div>
 
 <!-- Modal Pengawas -->
 	<div class="modal fade" id="modalPengawas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -186,14 +189,14 @@
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<!-- FOOTER -->
-	<div class="row">
-      <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2013 Kicau Mania &middot; </p>
-      </footer>
-	</div>
-    </div><!-- /.container -->
+	<div class="navbar navbar-inverse navbar-static-bottom" style="margin-top:152px" role="navigation">
+            <div class="container">
+            <div class="text-center">
+            <p style="color:#000;padding-top:15px">Copyright &copy; Kicau Mania . Created by <strong>Pandawa</strong> Rama Zeta signature</p>
+            </div>
+            </div>
+
+      </div>
 
 
     <!-- Bootstrap core JavaScript

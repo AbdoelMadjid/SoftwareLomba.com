@@ -1,255 +1,301 @@
- 
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
-	
-    <div class="container marketing">
-		
-      <!-- START THE FEATURETTES -->
-
-      <hr class="custom-divider">
-
-	  <ul class="breadcrumb" style="margin-bottom: 5px;">
-                <li><a href="<?php echo base_url();?>">Home</a></li>
+		<div class="container" style="margin-top:75px;">
+	      	<ul class="breadcrumb" style="margin-top:15px;margin-bottom: 5px;">
+	            <li><a href="<?php echo base_url();?>">Home</a></li>
                 <li><a href="<?php echo base_url();?>event">Event</a></li>
-				<li><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event.'">'.$urlhelper->event;?></a></li>
-				<li class="active"><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event.'">'.$urlhelper->nama_kelas;?></a></li>
-				<li class="active"><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event.'">'.$urlhelper->jenis;?></a></li>
-              </ul>
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h3>Pengajuan Nominasi <?php echo $urlhelper->event;?> <span class="text-muted"></span></h3>
-		  <h4>Kelas : <?php echo $urlhelper->nama_kelas;?> | Jenis Burung : <?php echo $urlhelper->jenis;?><span class="text-muted"></span></h3>
-        </div>
-      </div>
+				<li><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event;?>"><?php echo $urlhelper->event;?></a></li>
+				<li class="active"><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event;?>"><?php echo $urlhelper->nama_kelas;?></a></li>
+				<li class="active"><a href="<?php echo base_url().'event/detail/'.$urlhelper->id_event?>"><?php echo $urlhelper->jenis;?></a></li>
+            </ul>
+	   	</div> 
 
-	  <div class="row">
-		<ul class="nav nav-tabs" style="margin-bottom: 15px;">
-			<li class="active"><a href="#homecpt" data-toggle="tab">Pengajuan Nominasi Cepat</a></li>
-			<li><a href="#home" data-toggle="tab">Pengajuan Nominasi</a></li>
-			<li><a href="#profile" data-toggle="tab">Ranking Nominasi</a></li>
-			
-			<li <?php 
-			if($jenis->koncer_dibuka == 0){
-			echo "class='disabled'";
-			}
-			?>><a href="#koncer" data-toggle="tab">Koncer</a></li>
-			<li <?php 
-			if($jenis->koncer_dibuka == 0){
-			echo "class='disabled'";
-			}
-			?>><a href="#hasil" data-toggle="tab">Hasil Koncer</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-		<div class="tab-pane fade active in" id="homecpt">
-			
-			<!-- TABLE START -->
-			  <div class="bs-example table-responsive">
-              <table id="editnilai" class="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr class="success">
-                    <th width='70px'>Kode Juri</th>
-                    <th width='200px'>Nama</th>
-					<th colspan='13'>Input Langsung 1-15</th>
-					<th colspan='2'>Submit</th>
-                  </tr>
-                </thead>
-                <tbody>
-				<!-- NILAI PENGAWAS -->
-                  <tr class="warning">
-                    <td colspan="17">Pengawas</td>
-                  </tr>
-                  
-				  <?php
-				  $count = 1;
-				  foreach($pengawas as $p){
-				  	$testl = $p->id_juri;
-				 	$testk = $this->uri->segment(4);
-				  	$ci = &get_instance();
-					$ci->load->model('nilai_model');
-					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
-				  ?>
+	   	<div class="container">
+	   		<?php if($this->session->flashdata('error_msg') != ""){?>
+	      	<div class="alert alert-danger">
+	      		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	      		<strong>ERROR! </strong><?php echo $this->session->flashdata('error_msg');?>
+	      	</div>
+	      	<?php } else if ($this->session->flashdata('success_msg') != ""){?>
+	      	<div class="alert alert-success">
+	      		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	      		<strong>SUCCESS! </strong><?php echo $this->session->flashdata('success_msg');?>
+	      	</div>
+	      	<?php } else if ($this->session->flashdata('info_msg') != ""){?>
+	      	<div class="alert alert-info">
+	      		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	      		<strong>INFO! </strong><?php echo $this->session->flashdata('info_msg');?>
+	      	</div>
+	      	<?php } ?>
+	   	</div> 
 
-                  <tr>
-                    <td><?php echo "P$count";?></td>
-                    <td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-                    <?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
-					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
-					<?php echo form_close();?>
-                  </tr>
-				  <?php $count+=1;} ?>
-				 
-				 <!-- Inspektur PELAKSANA -->
-                  <tr class="warning">
-                    <td colspan="17">Inspektur Pelaksana</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($inspektur as $p){
-					  	$testl = $p->id_juri;
-				 	$testk = $this->uri->segment(4);
-				  	$ci = &get_instance();
-					$ci->load->model('nilai_model');
-					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
-					  ?>
-					  <tr>
-						<td><?php echo "IP	$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
-					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
-					<?php echo form_close();?>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  
-				  <!-- Koordinator Lapangan-->
-                  <tr class="warning">
-                    <td colspan="17">Koordinator Lapangan</td>
-                  </tr>
-					 <?php
-					  $count = 1;
-					  foreach($korlap as $p){
-					  	$testl = $p->id_juri;
-				 	$testk = $this->uri->segment(4);
-				  	$ci = &get_instance();
-					$ci->load->model('nilai_model');
-					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
-					  ?>
-					  <tr>
-						<td><?php echo "K$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
-					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
-					<?php echo form_close();?>			  
-					   </tr>
-					  <?php $count+=1;} ?>
-				  
-				  <!-- Juri -->
-                  <tr class="warning">
-                    <td colspan="17">Juri</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($juri as $p){
-					  	$testl = $p->id_juri;
-				 	$testk = $this->uri->segment(4)	;
-				  	$ci = &get_instance();
-					$ci->load->model('nilai_model');
-					$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
-					  ?>
-					  <tr>
-						<td><?php echo "J$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
-					<td colspan="13"><input type="text" class="form-control" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
-					<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
-					<?php echo form_close();?>
-					  </tr>
-					  <?php $count+=1;} ?>
-                </tbody>
-              </table>
-            </div>
-			<!-- TABLE END -->
+	   	<div class="container">
+	   		<div class="row">
+	   		<div class="col-md-12">
+	   			<h3>Pengajuan Nominasi <?php echo $urlhelper->event;?> <span class="text-muted"></span></h3>
+		  		<h4>Kelas : <?php echo $urlhelper->nama_kelas;?> | Jenis Burung : <?php echo $urlhelper->jenis;?><span class="text-muted"></span></h4>
+	   		</div>
+	   		</div>
+	   	</div>
+
+	   	<div class="container">
+	   		<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+				<li class="active"><a href="#homecpt" data-toggle="tab">Pengajuan Nominasi Cepat</a></li>
+				<li><a href="#home" data-toggle="tab">Pengajuan Nominasi</a></li>
+				<li><a href="#profile" data-toggle="tab">Ranking Nominasi</a></li>
+				<li <?php echo ($jenis->koncer_dibuka == 0) ? "class='disabled'" : "" ?>><a href="#koncer" data-toggle="tab">Koncer</a></li>
+				<li <?php echo ($jenis->koncer_dibuka == 0) ? "class='disabled'" : "" ?>><a href="#hasil" data-toggle="tab">Hasil Koncer</a></li>
+			</ul>
+
+			<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade active in" id="homecpt">
+			  	<div class="bs-example table-responsive">
+	              <table id="editnilai" class="table table-striped table-bordered table-hover">
+	                <thead>
+	                  <tr class="success">
+	                    <th width='70px'>Kode Juri</th>
+	                    <th width='200px'>Nama</th>
+						<th colspan='13'>Input Langsung 1-15</th>
+						<th colspan='2'>Submit</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+					  <!-- Pengawas -->
+	                  <tr class="warning">
+	                    <td colspan="17">Pengawas</td>
+	                  </tr>
+						  <?php
+						  if($pengawas == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($pengawas as $p){
+						  	$testl = $p->id_juri;
+							$testk = $this->uri->segment(4)	;
+							$ci = &get_instance();
+							$ci->load->model('nilai_model');
+							$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
+						  ?>
+						  <tr>
+							<td><?php echo "P$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+								
+							<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
+							<td colspan="13"><input type="text" class="form-control" value="<?php foreach($p->nilai as $n) { echo $n->gantangan . " ";} ?>" name="frmnilai" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
+							<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
+							<?php echo form_close();?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					 <!-- Inspektur Pelaksana -->
+	                  <tr class="warning">
+	                    <td colspan="17">Inspektur Pelaksana</td>
+	                  </tr>
+						  <?php
+						  if($inspektur == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($inspektur as $p){
+						  	$testl = $p->id_juri;
+							$testk = $this->uri->segment(4)	;
+							$ci = &get_instance();
+							$ci->load->model('nilai_model');
+							$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
+						  ?>
+						  <tr>
+							<td><?php echo "IP$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
+							<td colspan="13"><input type="text" class="form-control" name="frmnilai" value="<?php foreach($p->nilai as $n) { echo $n->gantangan . " ";} ?>" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
+							<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
+							<?php echo form_close();?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					<!-- Koordinator Lapangan -->
+	                  <tr class="warning">
+	                    <td colspan="17">Koordinator Lapangan</td>
+	                  </tr>
+						  <?php
+						  if($korlap == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17	" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($korlap as $p){
+						  	$testl = $p->id_juri;
+							$testk = $this->uri->segment(4)	;
+							$ci = &get_instance();
+							$ci->load->model('nilai_model');
+							$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
+						  ?>
+						  <tr>
+							<td><?php echo "K$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
+							<td colspan="13"><input type="text" class="form-control" name="frmnilai" value="<?php foreach($p->nilai as $n) { echo $n->gantangan . " ";} ?>" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
+							<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
+							<?php echo form_close();?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					  <!-- Juri -->
+	                  <tr class="warning">
+	                    <td colspan="17">Juri</td>
+	                  </tr>
+						  <?php
+						  if($juri == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($juri as $p){
+						  	$testl = $p->id_juri;
+							$testk = $this->uri->segment(4)	;
+							$ci = &get_instance();
+							$ci->load->model('nilai_model');
+							$jumlah_n = $ci->nilai_model->hitungJumlahNilai($testl,$testk);
+						  ?>
+						  <tr>
+							<td><?php echo "A$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php echo form_open('nilai/tambah'); echo form_hidden('id_juri',$p->id_juri); echo form_hidden('id_event',$this->uri->segment(3)); echo form_hidden('id_jenis',$this->uri->segment(4));?>
+							<td colspan="13"><input type="text" class="form-control" name="frmnilai" value="<?php foreach($p->nilai as $n) { echo $n->gantangan . " ";} ?>" <?php echo (($jumlah_n == 15) ? "disabled" : "")?>></td>
+							<td colspan="2"><?php echo form_submit(array('class' => 'btn btn-primary btn-block', 'value' => 'Simpan'));?></td>
+							<?php echo form_close();?>
+						  </tr>
+						  <?php $count+=1;} ?>
+	                </tbody>
+	              </table>
+            	</div>
 			</div>
 
 			<div class="tab-pane fade" id="home">
-			
-			<!-- TABLE START -->
-			  <div class="bs-example table-responsive">
-              <table id="editnilai" class="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr class="success">
-                    <th width='70px'>Kode Juri</th>
-                    <th width='200px'>Nama</th>
-					
-					<?php
-					for($i = 1; $i <= 15; $i++)
-					echo "<th width='38px'>$i</th>";
-                    ?>
-                  </tr>
-                </thead>
-                <tbody>
-				<!-- NILAI PENGAWAS -->
-                  <tr class="warning">
-                    <td colspan="17">Pengawas</td>
-                  </tr>
-				  <?php
-				  $count = 1;
-				  foreach($pengawas as $p){
-				  ?>
-                  <tr>
-                    <td><?php echo "P$count";?></td>
-                    <td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-					<?php foreach($p->nilai as $n) { ?>
-					<td>
-						<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
-					</td>
-                    <?php } ?>
-                  </tr>
-				  <?php $count+=1;} ?>
-				 
-				 <!-- Inspektur PELAKSANA -->
-                  <tr class="warning">
-                    <td colspan="17">Inspektur Pelaksana</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($inspektur as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "IP	$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php foreach($p->nilai as $n) { ?>
-						<td>
-							<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
-						</td>
-						<?php } ?>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  
-				  <!-- Koordinator Lapangan-->
-                  <tr class="warning">
-                    <td colspan="17">Koordinator Lapangan</td>
-                  </tr>
-					 <?php
-					  $count = 1;
-					  foreach($korlap as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "K$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php foreach($p->nilai as $n) { ?>
-							<td>
-								<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
-							</td>
-						<?php } ?>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  
-				  <!-- Juri -->
-                  <tr class="warning">
-                    <td colspan="17">Juri</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($juri as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "J$count";?></td>
-						<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
-						<?php foreach($p->nilai as $n) { ?>
-							<td>
-								<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
-							</td>
-						<?php } ?>
-					  </tr>
-					  <?php $count+=1;} ?>
-                </tbody>
-              </table>
-            </div>
-			<!-- TABLE END -->
+				  <div class="bs-example table-responsive">
+	              <table id="editnilai" class="table table-striped table-bordered table-hover">
+	                <thead>
+	                  <tr class="success">
+	                    <th width='70px'>Kode Juri</th>
+	                    <th width='200px'>Nama</th>
+						
+						<?php
+						for($i = 1; $i <= 15; $i++)
+						echo "<th width='38px'>$i</th>";
+	                    ?>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                <!-- Pengawas -->
+	                  <tr class="warning">
+	                    <td colspan="17">Pengawas</td>
+	                  </tr>
+						  <?php
+						  if($pengawas == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($pengawas as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "P$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php foreach($p->nilai as $n) { ?>
+								<td>
+									<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
+								</td>
+							<?php } ?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					 <!-- Inspektur Pelaksana -->
+	                  <tr class="warning">
+	                    <td colspan="17">Inspektur Pelaksana</td>
+	                  </tr>
+						  <?php
+						  if($inspektur == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($inspektur as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "IP$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php foreach($p->nilai as $n) { ?>
+								<td>
+									<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
+								</td>
+							<?php } ?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					<!-- Koordinator Lapangan -->
+	                  <tr class="warning">
+	                    <td colspan="17">Koordinator Lapangan</td>
+	                  </tr>
+						  <?php
+						  if($korlap == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($korlap as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "K$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php foreach($p->nilai as $n) { ?>
+								<td>
+									<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
+								</td>
+							<?php } ?>
+						  </tr>
+						  <?php $count+=1;} ?>
+
+					  <!-- Juri -->
+	                  <tr class="warning">
+	                    <td colspan="17">Juri</td>
+	                  </tr>
+						  <?php
+						  if($juri == null){
+						  	echo '
+						  	<tr>
+								<td colspan="17" class="text-center"> <strong>--- Belum ada Data ---</strong></td>
+						  	</tr>';
+						  }
+						  $count = 1;
+						  foreach($juri as $p){
+						  ?>
+						  <tr>
+							<td><?php echo "A$count";?></td>
+							<td><a href="#" id="editnama" data-pk="<?php echo $p->id_juri;?>"><?php echo $p->nama;?></a></td>
+							<?php foreach($p->nilai as $n) { ?>
+								<td>
+									<a href="#" id="edit" data-pk="<?php echo $n->id_nilai;?>"><?php echo $n->gantangan;?></a>
+								</td>
+							<?php } ?>
+						  </tr>
+						  <?php $count+=1;} ?>
+	                </tbody>
+	              </table>
+	            </div>
 			</div>
 
 			<!-- TAB HASIL NOMINASI -->
@@ -354,6 +400,9 @@
 			  <div class="bs-example table-responsive">
               <table id="editnilai" class="table table-striped table-bordered table-hover">
                 <thead>
+                <tr class="warning text-center">
+                    <td colspan="5">Juri</td>
+                  </tr>
                   <tr class="success">
                     <th width='70px'>Kode Juri</th>
                     <th width='200px'>Nama</th>
@@ -363,128 +412,19 @@
 					echo "<th>Koncer A</th>";
 					echo "<th>Koncer B</th>";
 					echo "<th>Koncer C</th>";
+					echo "<th>Reset Koncer</th>";
                     ?>
                   </tr>
                 </thead>
                 <tbody>
-				<!-- NILAI PENGAWAS -->
-                  <tr class="warning">
-                    <td colspan="5">Pengawas</td>
-                  </tr>
-				  <?php
-				  $count = 1;
-				  foreach($pengawas as $p){
-				  ?>
-                  <tr>
-                    <td><?php echo "P$count";?></td>
-                    <td><?php echo $p->nama;?></td>
-					<td>
-						<a href="#" id="editkoncera" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-						data-value="0" 
-						data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-						data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-						title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncera;?></a>						
-					</td>
-                    <td>
-						<a href="#" id="editkoncerb" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-						data-value="0" 
-						data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-						data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-						title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerb;?></a>
-					</td>
-					<td>
-						<a href="#" id="editkoncerc" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-						data-value="0" 
-						data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-						data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-						title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerc;?></a>
-					</td>
-                  </tr>
-				  <?php $count+=1;} ?>
-				 
-				 <!-- Inspektur PELAKSANA -->
-                  <tr class="warning">
-                    <td colspan="5">Inspektur Pelaksana</td>
-                  </tr>
-					  <?php
-					  $count = 1;
-					  foreach($inspektur as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "IP$count";?></td>
-						<td><?php echo $p->nama;?></td>
-						<td>
-							<a href="#" id="editkoncera" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncera;?></a>						
-						</td>
-						<td>
-							<a href="#" id="editkoncerb" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerb;?></a>
-						</td>
-						<td>
-							<a href="#" id="editkoncerc" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerc;?></a>
-						</td>
-					  </tr>
-					  <?php $count+=1;} ?>
-				  <tr>
-                  </tr>
-				  
-				  <!-- Koordinator Lapangan-->
-                  <tr class="warning">
-                    <td colspan="5">Koordinator Lapangan</td>
-                  </tr>
-					 <?php
-					  $count = 1;
-					  foreach($korlap as $p){
-					  ?>
-					  <tr>
-						<td><?php echo "K$count";?></td>
-						<td><?php echo $p->nama;?></td>
-						<td>
-							<a href="#" id="editkoncera" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncera;?></a>						
-						</td>
-						<td>
-							<a href="#" id="editkoncerb" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerb;?></a>
-						</td>
-						<td>
-							<a href="#" id="editkoncerc" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
-							data-value="0" 
-							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
-							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
-							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerc;?></a>
-						</td>
-					  </tr>
-					  <?php $count+=1;} ?>
-				
 				  
 				  <!-- Juri -->
-                  <tr class="warning">
-                    <td colspan="5">Juri</td>
-                  </tr>
 					  <?php
 					  $count = 1;
 					  foreach($juri as $p){
 					  ?>
 					  <tr>
-						<td><?php echo "J$count";?></td>
+						<td><?php echo "A$count";?></td>
 						<td><?php echo $p->nama;?></td>
 						<td>
 							<a href="#" id="editkoncera" data-type="select" data-pk="<?php echo $p->koncer->id_koncer;?>"
@@ -506,6 +446,9 @@
 							data-source="<?php echo base_url()."nilai/list_koncer/".$urlhelper->id_jenis."/".$jenis->jumlah_koncer;?>" 
 							data-title="Pilih koncer" class="editable editable-click" data-original-title="" 
 							title="" style="background-color: rgba(0, 0, 0, 0);"><?php echo $p->koncer->koncerc;?></a>
+						</td>
+						<td>
+							<a href="<?php echo base_url()."nilai/reset_koncer/".$p->id_juri."/".$urlhelper->id_jenis."/".$this->uri->segment(3);?>" class="btn btn-primary btn-block" style="text-decoration:none;">Reset</a>
 						</td>
 					  </tr>
 					  <?php $count+=1;} ?>				  
@@ -521,7 +464,7 @@
 				
 			  <div class="bs-example table-responsive">
 					
-				  <div class="col-lg-4">
+				  <div class="col-lg-12">
 				  <a href="<?php echo base_url()."nilai/export_hasil/".$urlhelper->id_jenis;?>" target="_BLANK">Export ke excel</a>
 				  <table id="datanominasi" class="table table-striped table-bordered table-hover">
 					<thead>
@@ -565,9 +508,8 @@
 				 
 			</div>
 		  </div>
-	  </div>
-      
-	 </div>
+	  	</div>
+	   	</div>
 	
 	<!-- Modal Pengawas -->
 	<div class="modal fade" id="modalPengawas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -661,15 +603,17 @@
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
-	
-<!-- FOOTER -->
-	<div class="row">
-      <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2013 Kicau Mania &middot; </p>
-      </footer>
+
+	<div class="navbar navbar-inverse navbar-static-bottom" role="navigation" style="margin-top:151px">
+            <div class="container">
+            <div class="text-center">
+            <p style="color:#000;padding-top:15px">Copyright &copy; Kicau Mania . Created by <strong>Pandawa</strong> Rama Zeta signature</p>
+            </div>
+            </div>
+
 	</div>
-    </div><!-- /.container -->
+
+	</div><!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

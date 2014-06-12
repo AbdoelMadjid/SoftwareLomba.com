@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +8,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
 
-    <title>Sign in</title>
+    <title>Log in - Kicau Mania</title>
 
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url();?>public/dist/css/bootstrap.css" rel="stylesheet">
@@ -27,23 +26,42 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body style="background:#2ECC71;">
 
     <div class="container">
-	   
-	  <form class="form-signin" action="<?php echo base_url();?>login/verify" method="POST" accept-charset="utf-8">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
-        <input type="password"  name="password" id="password" class="form-control" placeholder="Password" required>
-		<?php echo $message;?>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
 
-    </div> <!-- /container -->
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form role="form" action="<?php echo base_url();?>login/verify" method="POST" >
+              <fieldset>
+              <img src="http://localhost/lomba/public/image/logo_header.png" class="text-center">
+              <div class="well">
+                <h2>Please Sign In</h2>
+                <hr class="colorgraph">
+                <div class="form-group">
+                            <input type="text" name="username" id="email" class="form-control input-lg" placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
+                </div>
+                <hr class="colorgraph">
+                <div class="row">
+                  <div class="col-xs-4 col-sm-4 col-md-4 pull-right">
+                    <input type="submit" class="btn btn-lg btn-success btn-block" value="Sign In">
+                  </div>
+                </div>
+              </fieldset>
+              </div>
+            </form>
+      </div>
+    </div>
+
+</div>
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
   </body>
+
 </html>

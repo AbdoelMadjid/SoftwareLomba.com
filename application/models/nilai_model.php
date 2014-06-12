@@ -30,7 +30,7 @@ LIMIT 0 , 30
 	}
 	
 	public function list_koncer($id_juri, $id_jenis){
-		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
+		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri,'id_jenis' => $id_jenis));
 		if($query->num_rows > 0)
 		return $query->row(); //kembalikan daftar event
 		
@@ -44,7 +44,7 @@ LIMIT 0 , 30
 
 		$this->db->insert('koncer', $data); 
 		
-		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri));
+		$query = $this->db->get_where('koncer', array('id_juri' => $id_juri,'id_jenis' => $id_jenis));
 		return $query->row(); //kembalikan daftar event
 
 	}
@@ -173,13 +173,27 @@ LIMIT 0 , 30
 	}
 
 	public function insert_nilai_pertama($id_juri,$id_jenis,$gantangan){
+		$query = $this->db->get_where('nilai',array('id_juri' => $id_juri, 'id_jenis' => $id_jenis, 'gantangan' => $gantangan));
+		if($query->num_rows > 0){
+			return false;
+		}
 		$data = array(
-		   'id_juri' => $id_juri,
-		   'id_jenis' => $id_jenis,
-		   'gantangan' => $gantangan
+			'id_juri' => $id_juri,
+			'id_jenis' => $id_jenis,
+			'gantangan' => $gantangan
 		);
 
 		$this->db->insert('nilai', $data); 
+		return true;
+	}
+
+	public function reset_koncer($id_juri,$id_jenis){
+		$data = array(
+			'koncera' => 0,
+			'koncerb' => 0,
+			'koncerc' => 0
+		);
+		$this->db->update('koncer', $data, array('id_juri' => $id_juri, 'id_jenis' => $id_jenis));
 	}
 }
 ?>
